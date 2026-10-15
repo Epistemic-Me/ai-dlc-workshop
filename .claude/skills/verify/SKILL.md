@@ -49,6 +49,7 @@ TOKEN=$(curl -s -X POST localhost:3100/api/auth/login \
 | Quote | `POST /api/checkout` `{"items":[{"productId":"prod_pen","quantity":2}],"discountCode":"WORKSHOP10"}` | `quote` cents: subtotal, discount, tax, total | `src/domains/checkout/service.test.ts`, `src/app/api/checkout/route.test.ts` |
 | Place order | Same body plus `"place":true`, with the token | 201 and `order.id`; 401 without a token | same |
 | Order history | `GET /api/orders` with the token | `orders` (legacy shape), `totalSpent` | `src/legacy/order-dao.test.ts` |
+| Support agent | `POST /api/support` `{"message":"Where are my orders?"}`, with and without the token | `reply`, `toolCalls`, `handoff`; never another user's order | `src/support-agent/agent.test.ts`, `src/app/api/support/route.test.ts` |
 | Billing | `GET /api/billing`; `POST /api/billing` `{"planId":"pro"}` with the token | `subscription.planId`, `invoices[].amountCents` | `src/domains/billing/service.test.ts` |
 | Orders data layer | A test that builds a database with `createDatabase()` and reads `db.table("orders")` | Row values in cents; `schemaVersion` | `src/db/order-repository.test.ts` |
 | Migrations | `migrate(db, n)` up and down in a test | Rows before and after, and `hasTable(...)` | `src/db/order-repository.test.ts` |

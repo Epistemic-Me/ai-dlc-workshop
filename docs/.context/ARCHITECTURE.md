@@ -51,6 +51,14 @@ Both layers read the same tables. Checkout writes through `OrderRepository`. Som
 
 New code uses `@/db`. Do not add new calls to `@/legacy`.
 
+## Support agent
+
+`src/support-agent/` is a customer support agent inside the store, served by `POST /api/support` with `{ message }`.
+
+- `types.ts` defines `LlmProvider`. `mock-llm.ts` is the only provider: it is deterministic, picks a tool from keywords, and makes no network call.
+- `tools.ts` has four tools: `list_orders`, `lookup_order`, `search_products`, `get_plan`. Order and plan tools need a session and only return the user's own data.
+- `agent.ts` runs at most three model steps, then hands off to a person.
+
 ## Conventions
 
 - TypeScript strict mode. No `any`.

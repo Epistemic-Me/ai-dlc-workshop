@@ -4,12 +4,13 @@ Rules for any coding agent working in this repo (Claude Code, Codex, Cursor, Cop
 
 ## What this repo is
 
-A Next.js 15 (App Router, React 19, TypeScript) example store with four domains: auth, search, checkout, billing. Each domain uses an in-memory mock provider. There is no database server, no network call, no `.env`, and no secret.
+A Next.js 15 (App Router, React 19, TypeScript) example store with four domains (auth, search, checkout, billing) and a customer support agent. Each domain uses an in-memory mock provider. There is no database server, no network call, no `.env`, and no secret.
 
 ## Where things live
 
 - Domains: `src/domains/<name>/`. API routes: `src/app/api/<name>/`. Pages: `src/app/`.
 - Orders data: `src/db/` (new layer) and `src/legacy/` (old layer, being replaced).
+- Support agent: `src/support-agent/` (mock LLM provider, no network).
 - Architecture, conventions, and commands: `docs/.context/ARCHITECTURE.md`.
 - Specs: `docs/specs/`. Opportunity Solution Tree and registers: `docs/.context/`.
 - Tickets: `backlog/`. Skills: `.claude/skills/`. Prompts per tool: `prompts/`.
@@ -24,7 +25,7 @@ This file is short on purpose. In Lab 1 you add three lines here: how to run the
 | search agent | `src/domains/search/`, `src/app/api/search/`, `src/app/page.tsx`, `docs/specs/search.md`, `docs/plans/search-*.md`, `docs/reviews/search-*.md` |
 | checkout agent | `src/domains/checkout/`, `src/app/api/checkout/`, `src/app/api/orders/`, `src/app/checkout/`, `docs/specs/checkout.md`, `docs/plans/checkout-*.md`, `docs/reviews/checkout-*.md` |
 | billing agent | `src/domains/billing/`, `src/app/api/billing/`, `src/app/billing/`, `docs/specs/billing.md`, `docs/plans/billing-*.md`, `docs/reviews/billing-*.md` |
-| lead (human) | everything else: `src/domains/errors.ts`, `src/domains/singleton.ts`, `src/lib/`, `src/db/`, `src/legacy/`, `src/app/layout.tsx`, `src/app/globals.css`, config, `package.json`, `docs/.context/` |
+| lead (human) | everything else: `src/domains/errors.ts`, `src/domains/singleton.ts`, `src/lib/`, `src/db/`, `src/legacy/`, `src/support-agent/`, `src/app/api/support/`, `src/app/layout.tsx`, `src/app/globals.css`, config, `package.json`, `docs/.context/` |
 
 If you are a domain agent:
 
