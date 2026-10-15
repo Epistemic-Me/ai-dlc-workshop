@@ -1,3 +1,4 @@
+import { orderRepository } from "@/db";
 import { searchService } from "@/domains/search";
 import { singleton } from "../singleton";
 import { InMemoryCheckoutProvider } from "./provider";
@@ -8,7 +9,11 @@ export { CheckoutService, TAX_RATE, DISCOUNT_CODES, MAX_QUANTITY, MAX_LINES } fr
 export { InMemoryCheckoutProvider, type ProductLookup } from "./provider";
 
 // Checkout reads prices through the search domain's public API only.
+// Orders are stored through the shared data layer in @/db.
 export const checkoutService = singleton(
   "checkout",
-  () => new CheckoutService(new InMemoryCheckoutProvider((id) => searchService.getProduct(id))),
+  () =>
+    new CheckoutService(
+      new InMemoryCheckoutProvider((id) => searchService.getProduct(id), orderRepository),
+    ),
 );

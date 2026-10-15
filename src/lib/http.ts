@@ -28,5 +28,13 @@ export async function readJson(request: Request): Promise<Record<string, unknown
   }
 }
 
+/**
+ * @deprecated Use errorResponse() with a domain error, or invalidJson().
+ * Old helper: the caller picks the status code, so it can drift from STATUS.
+ */
+export function jsonError(code: string, message: string, status: number) {
+  return NextResponse.json({ error: { code, message } }, { status });
+}
+
 export const invalidJson = () =>
   errorResponse({ code: "invalid_json", message: "Request body must be a JSON object." });

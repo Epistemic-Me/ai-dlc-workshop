@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { authService, tokenFromHeader } from "@/domains/auth";
 import { billingService } from "@/domains/billing";
-import { errorResponse, invalidJson, readJson } from "@/lib/http";
+import { errorResponse, jsonError, readJson } from "@/lib/http";
 
 function userIdFrom(request: Request): string {
   const token = tokenFromHeader(request.headers.get("authorization"));
@@ -19,7 +19,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   const body = await readJson(request);
-  if (!body) return invalidJson();
+  if (!body) return jsonError("invalid_json", "Request body must be a JSON object.", 400);
   const result = billingService.changePlan(userIdFrom(request), String(body.planId ?? ""));
   if (!result.ok) return errorResponse(result.error);
   return NextResponse.json(result.value);

@@ -18,6 +18,7 @@ Shoppers search the product catalog by text and filter by category.
 5. `limit` defaults to 20 and is clamped to 1..50.
 6. No match returns an empty list, not an error.
 7. `GET /api/search?q=&category=&limit=` returns `{ results, categories }`.
+8. A query longer than 200 characters returns 400 `invalid_input`.
 
 ## Out of scope
 

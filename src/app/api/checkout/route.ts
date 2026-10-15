@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { authService, tokenFromHeader } from "@/domains/auth";
 import { checkoutService, type CartItem } from "@/domains/checkout";
-import { errorResponse, invalidJson, readJson } from "@/lib/http";
+import { errorResponse, jsonError, readJson } from "@/lib/http";
 
 function parseItems(value: unknown): CartItem[] {
   if (!Array.isArray(value)) return [];
@@ -15,7 +15,7 @@ function parseItems(value: unknown): CartItem[] {
 
 export async function POST(request: Request) {
   const body = await readJson(request);
-  if (!body) return invalidJson();
+  if (!body) return jsonError("invalid_json", "Request body must be a JSON object.", 400);
   const items = parseItems(body.items);
   const rawCode = body.discountCode;
   if (rawCode != null && typeof rawCode !== "string") {
