@@ -1,0 +1,242 @@
+diff --git a/src/db/index.ts b/src/db/index.ts
+index fdd1627..61b1f21 100644
+--- a/src/db/index.ts
++++ b/src/db/index.ts
+@@ -3,7 +3,7 @@ import { createDatabase } from "./migrations";
+ import { OrderRepository } from "./order-repository";
+ 
+ export { Database, DatabaseError, type Row } from "./database";
+-export type { OrderLine, OrderRow } from "./schema";
++export type { OrderLine, OrderLineRow, OrderRow } from "./schema";
+ export { createDatabase, migrate, MIGRATIONS, LATEST_VERSION, type Migration } from "./migrations";
+ export { OrderRepository, type OrderRecord } from "./order-repository";
+ 
+diff --git a/src/db/migrations/002_order_lines.ts b/src/db/migrations/002_order_lines.ts
+new file mode 100644
+index 0000000..bdc30d7
+--- /dev/null
++++ b/src/db/migrations/002_order_lines.ts
+@@ -0,0 +1,29 @@
++import type { OrderLine } from "../schema";
++import type { Migration } from "./types";
++
++export const orderLines: Migration = {
++  version: 2,
++  name: "order_lines",
++  up(db) {
++    db.createTable("order_lines");
++    const lines = db.table("order_lines");
++    for (const order of db.table("orders")) {
++      const parsed = JSON.parse(String(order.lines_json)) as OrderLine[];
++      parsed.forEach((l, position) =>
++        lines.push({
++          order_id: order.id,
++          position,
++          product_id: l.productId,
++          name: l.name,
++          quantity: l.quantity,
++          unit_price_cents: l.unitPriceCents,
++          line_total_cents: l.lineTotalCents,
++        }),
++      );
++      delete order.lines_json;
++    }
++  },
++  down(db) {
++    db.dropTable("order_lines");
++  },
++};
+diff --git a/src/db/migrations/index.ts b/src/db/migrations/index.ts
+index ab8822d..7e43d45 100644
+--- a/src/db/migrations/index.ts
++++ b/src/db/migrations/index.ts
+@@ -1,11 +1,12 @@
+ import { Database, DatabaseError } from "../database";
+ import { createOrders } from "./001_create_orders";
++import { orderLines } from "./002_order_lines";
+ import type { Migration } from "./types";
+ 
+ export type { Migration } from "./types";
+ 
+ // Keep in version order. Add new migrations at the end.
+-export const MIGRATIONS: Migration[] = [createOrders];
++export const MIGRATIONS: Migration[] = [createOrders, orderLines];
+ 
+ export const LATEST_VERSION = MIGRATIONS.length;
+ 
+diff --git a/src/db/order-repository.test.ts b/src/db/order-repository.test.ts
+index 72fd6a6..3932e0f 100644
+--- a/src/db/order-repository.test.ts
++++ b/src/db/order-repository.test.ts
+@@ -17,9 +17,15 @@ function order(id: string, userId: string, createdAt: number, totalCents = 1000)
+ }
+ 
+ describe("migrations", () => {
++  it("creates the order_lines table", () => {
++    const db = createDatabase();
++    expect(db.schemaVersion).toBe(2);
++    expect(db.hasTable("order_lines")).toBe(true);
++  });
++
+   it("creates the orders table and rolls it back", () => {
+     const db = createDatabase();
+-    expect(db.schemaVersion).toBe(1);
++    expect(db.schemaVersion).toBe(2);
+     expect(db.hasTable("orders")).toBe(true);
+     migrate(db, 0);
+     expect(db.schemaVersion).toBe(0);
+diff --git a/src/db/order-repository.ts b/src/db/order-repository.ts
+index 0bbffb4..d357ba7 100644
+--- a/src/db/order-repository.ts
++++ b/src/db/order-repository.ts
+@@ -1,5 +1,5 @@
+ import type { Database } from "./database";
+-import type { OrderLine, OrderRow } from "./schema";
++import type { OrderLine, OrderLineRow, OrderRow } from "./schema";
+ 
+ export type OrderRecord = {
+   id: string;
+@@ -22,16 +22,15 @@ function toRow(order: OrderRecord): OrderRow {
+     tax_cents: order.taxCents,
+     total_cents: order.totalCents,
+     discount_code: order.discountCode,
+-    lines_json: JSON.stringify(order.lines),
+     created_at: order.createdAt,
+   };
+ }
+ 
+-function toRecord(row: OrderRow): OrderRecord {
++function toRecord(row: OrderRow, lines: OrderLine[]): OrderRecord {
+   return {
+     id: row.id,
+     userId: row.user_id,
+-    lines: JSON.parse(row.lines_json) as OrderLine[],
++    lines,
+     subtotalCents: row.subtotal_cents,
+     discountCents: row.discount_cents,
+     taxCents: row.tax_cents,
+@@ -49,16 +48,40 @@ export class OrderRepository {
+     return this.db.table<OrderRow>("orders");
+   }
+ 
++  private lines(orderId: string): OrderLine[] {
++    return this.db
++      .table<OrderLineRow>("order_lines")
++      .filter((l) => l.order_id === orderId)
++      .map((l) => ({
++        productId: l.product_id,
++        name: l.name,
++        quantity: l.quantity,
++        unitPriceCents: l.unit_price_cents,
++        lineTotalCents: l.line_total_cents,
++      }));
++  }
++
+   insert(order: OrderRecord): void {
+     if (this.rows().some((r) => r.id === order.id)) {
+       throw new Error(`Duplicate order id: ${order.id}`);
+     }
+     this.rows().push(toRow(order));
++    order.lines.forEach((l, position) =>
++      this.db.table<OrderLineRow>("order_lines").push({
++        order_id: order.id,
++        position,
++        product_id: l.productId,
++        name: l.name,
++        quantity: l.quantity,
++        unit_price_cents: l.unitPriceCents,
++        line_total_cents: l.lineTotalCents,
++      }),
++    )
+   }
+ 
+   findById(id: string): OrderRecord | undefined {
+     const row = this.rows().find((r) => r.id === id);
+-    return row ? toRecord(row) : undefined;
++    return row ? toRecord(row, this.lines(row.id)) : undefined;
+   }
+ 
+   // Newest first. Empty list when the user has no orders.
+@@ -66,7 +89,7 @@ export class OrderRepository {
+     return this.rows()
+       .filter((r) => r.user_id === userId)
+       .sort((a, b) => b.created_at - a.created_at)
+-      .map(toRecord);
++      .map((r) => toRecord(r, this.lines(r.id)));
+   }
+ 
+   totalCentsByUser(userId: string): number {
+diff --git a/src/db/schema.ts b/src/db/schema.ts
+index dc612ac..1262d23 100644
+--- a/src/db/schema.ts
++++ b/src/db/schema.ts
+@@ -8,11 +8,19 @@ export type OrderRow = {
+   tax_cents: number;
+   total_cents: number;
+   discount_code: string | null;
+-  // JSON array of OrderLine. MIGRATE-04 moves this to its own table.
+-  lines_json: string;
+   created_at: number;
+ };
+ 
++export type OrderLineRow = {
++  order_id: string;
++  position: number;
++  product_id: string;
++  name: string;
++  quantity: number;
++  unit_price_cents: number;
++  line_total_cents: number;
++};
++
+ export type OrderLine = {
+   productId: string;
+   name: string;
+diff --git a/src/legacy/order-dao.ts b/src/legacy/order-dao.ts
+index 44e0580..3b0458c 100644
+--- a/src/legacy/order-dao.ts
++++ b/src/legacy/order-dao.ts
+@@ -1,4 +1,4 @@
+-import type { Database, OrderLine, OrderRow } from "@/db";
++import type { Database, OrderLineRow, OrderRow } from "@/db";
+ 
+ export class LegacyDataError extends Error {}
+ 
+@@ -17,12 +17,11 @@ export type LegacyOrder = {
+   created: string;
+ };
+ 
+-function toLegacy(row: OrderRow): LegacyOrder {
+-  const lines = JSON.parse(row.lines_json) as OrderLine[];
++function toLegacy(row: OrderRow, lines: OrderLineRow[]): LegacyOrder {
+   const order: LegacyOrder = {
+     orderId: row.id,
+     customer: row.user_id,
+-    items: lines.map((l) => ({ sku: l.productId, qty: l.quantity, price: l.unitPriceCents / 100 })),
++    items: lines.map((l) => ({ sku: l.product_id, qty: l.quantity, price: l.unit_price_cents / 100 })),
+     total: row.total_cents / 100,
+     created: new Date(row.created_at).toISOString(),
+   };
+@@ -37,16 +36,20 @@ function toLegacy(row: OrderRow): LegacyOrder {
+ export class LegacyOrderDao {
+   constructor(private db: Database) {}
+ 
++  private linesFor(row: OrderRow) {
++    return this.db.table<OrderLineRow>("order_lines").filter((l) => l.order_id === row.id);
++  }
++
+   findOrdersByUser(userId: string): LegacyOrder[] | null {
+     const rows = this.db.table<OrderRow>("orders").filter((r) => r.user_id === userId);
+     if (rows.length === 0) return null;
+-    return rows.sort((a, b) => (a.id < b.id ? -1 : 1)).map(toLegacy);
++    return rows.sort((a, b) => (a.id < b.id ? -1 : 1)).map((r) => toLegacy(r, this.linesFor(r)));
+   }
+ 
+   findOrderById(id: string): LegacyOrder | null {
+     if (!id) throw new LegacyDataError("order id required");
+     const row = this.db.table<OrderRow>("orders").find((r) => r.id === id.trim());
+-    return row ? toLegacy(row) : null;
++    return row ? toLegacy(row, this.linesFor(row)) : null;
+   }
+ 
+   getUserTotal(userId: string): number {

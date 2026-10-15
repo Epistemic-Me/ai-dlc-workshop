@@ -1,0 +1,17 @@
+{
+  "note": "Illustrative sample data. Not a measurement.",
+  "ticket": "BUG-01",
+  "run": "before",
+  "base_commit": "42d2b3b",
+  "tool": "agent CLI, one session, default model",
+  "input_tokens": 41200,
+  "output_tokens": 1900,
+  "cached_tokens": 18000,
+  "requests": 4,
+  "agent_minutes": 2,
+  "human_minutes": 3,
+  "review_minutes": 18,
+  "rework_minutes": 35,
+  "rereview_minutes": 10,
+  "outcome": "reworked"
+}

@@ -1,0 +1,17 @@
+{
+  "note": "Illustrative sample data. Not a measurement.",
+  "ticket": "MIGRATE-04",
+  "run": "arena-a",
+  "base_commit": "42d2b3b",
+  "tool": "agent CLI, one session per worktree, same brief",
+  "input_tokens": 96400,
+  "output_tokens": 6100,
+  "cached_tokens": 52000,
+  "requests": 9,
+  "agent_minutes": 5,
+  "human_minutes": 4,
+  "review_minutes": 22,
+  "rework_minutes": 40,
+  "rereview_minutes": 12,
+  "outcome": "reworked"
+}
