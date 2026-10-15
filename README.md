@@ -105,6 +105,8 @@ See `AGENTS.md` for the rules agents follow.
 
 ## Branches
 
+Choose a local branch with `git switch walk`, `git switch run`, or `git switch sprint`. Each starts from this version of `main` and keeps the same store and tests. The branch README states what its harness adds.
+
 | Branch | Harness |
 |---|---|
 | `main` | Everything in this README. |
