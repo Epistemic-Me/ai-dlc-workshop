@@ -82,3 +82,19 @@ MUST is a bug, a security problem, or a doc that misleads a learner. SHOULD is r
 | `npm run typecheck` | Passed |
 | `npm test` | Passed: 5 files, 43 tests |
 | `npm run build` | Passed |
+
+### npm audit
+
+Result: not fixed, because no safe fix exists today. The five high entries are one chain in development tools only.
+
+| Check | Result |
+|---|---|
+| `npm audit` | 5 high: `braces` through `micromatch`, `fast-glob`, `@next/eslint-plugin-next`, `eslint-config-next` |
+| `npm audit --omit=dev` | 0 vulnerabilities. Nothing in the app's runtime dependencies is affected. |
+| Patched `braces` | None. 3.0.3 is installed and is the latest release. The advisory (GHSA-vfj7-8cjw-p6xm) covers every version. |
+| Upgrade within the major | `eslint-config-next` is at 15.5.28, the latest 15.x, matching `next` 15.5.28. |
+| Next major | `eslint-config-next` 16 goes with Next 16, and its plugin still pins `fast-glob` 3.3.1, so it keeps the same chain. Not applied: it would mean a Next upgrade. |
+| npm overrides | No target to override to: every `micromatch` 4 release needs `braces` ^3, and every `fast-glob` 3 release needs `micromatch` 4. |
+| `npm audit fix --force` | Not applied. It downgrades `eslint-config-next` to 14. |
+
+Exposure: `braces` runs only when ESLint expands the repo's own glob patterns. It does not see user input. Check again when `braces` or `@next/eslint-plugin-next` ships a release that drops the chain.
