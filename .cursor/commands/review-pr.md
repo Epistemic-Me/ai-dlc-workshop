@@ -8,11 +8,11 @@ Argument: the ticket ID, for example `BUG-01`.
 
 ## Who reviews
 
-The reviewer must be fresh: no history from the session that wrote the code. It must also be from a second model family, different from the one that wrote the code. This is required in this course.
+Spawn a fresh AI reviewer with no history from the session that wrote the code. Use a second model family. Give the reviewer the ticket, the PR docs path, the diff, and the test strategy. This is required in this course.
 
-- If this tool can run a model from a different family, start a fresh session or subagent on that model.
-- If it cannot, run this command in a second tool that can (for example Codex, Cursor, or Copilot with a different model).
-- If neither is possible, use a fresh subagent and write "same model family" in the Reviewer line of `REVIEW.md`.
+- If this tool can run a second model family, spawn a fresh subagent on that model.
+- Otherwise, start a fresh reviewer in another tool with a second model family.
+- If neither is available, record the limit in `REVIEW.md`. Do not call the review independent.
 
 ## Steps for the reviewer
 

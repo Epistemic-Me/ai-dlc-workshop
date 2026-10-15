@@ -6,6 +6,10 @@ A small Next.js store you can change with AI coding agents. It has four domains 
 
 The workshop uses this repo to practice the AI development lifecycle (AI DLC): **Spec → Plan → Execute → Review → Learn**.
 
+## This branch
+
+`run` adds a fresh AI reviewer for `/review-pr`, decision records, and the current-sprint context file to the walk scaffold. [PR #001](docs/prs/_archive/2026-09-01-PR-001-search-tag-match/RESEARCH.md) is a worked example with all five PR documents in the same folder.
+
 ## Run it
 
 ```bash
