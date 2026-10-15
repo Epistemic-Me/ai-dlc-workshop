@@ -71,6 +71,8 @@ MUST is a bug, a security problem, or a doc that misleads a learner. SHOULD is r
 | 23 | COULD | `.gitignore` and `.ignore` mention a local tool that no doc explains. | Not changed. |
 | 24 | COULD | `docs/.context/README.md` names one tracker; the skill works with any tracker. | Not changed. |
 | 25 | COULD | A `null` cart item returns `invalid_quantity`, which names the wrong problem. | Not changed. The first review chose this on purpose. |
+| 26 | SHOULD | The first review says the discount lookup accepted `constructor` and could make the total non-finite. It could not: the service upper-cases the code first, and no inherited name is upper case. With `Object.hasOwn` replaced by a plain lookup, the test "rejects inherited object names as discount codes" still passes (13 of 13). | Record corrected here. The `Object.hasOwn` check stays as a guard in case the case rule changes. Found while writing the example PRs. |
+| 27 | COULD | The auth test "returns null for an expired session" does not check that the session is deleted, which the spec requires. | Not changed. |
 
 ### Verification after fixes
 
