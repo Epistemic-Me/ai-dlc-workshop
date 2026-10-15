@@ -32,7 +32,7 @@ export default function BillingPage() {
     }
   }
 
-  if (!data) return <p className="muted">Loading…</p>;
+  if (!data) return error ? <p className="error">{error}</p> : <p className="muted">Loading…</p>;
 
   return (
     <>

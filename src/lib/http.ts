@@ -11,6 +11,7 @@ const STATUS: Record<string, number> = {
   invalid_quantity: 400,
   invalid_discount: 400,
   empty_cart: 400,
+  too_many_lines: 400,
   same_plan: 409,
 };
 

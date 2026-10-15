@@ -31,7 +31,7 @@ Update `docs/specs/<domain>.md` with:
 - new or changed acceptance criteria, each one testable
 - what is out of scope
 
-Add or update the row in `docs/.context/registers/spec-register.md` with state `draft`.
+Add or update the row in `docs/.context/registers/spec-register.md` with state `draft`. In a Lab 2 swarm, put the row in your final report instead; the lead adds it.
 Do not change any code.
 ```
 
@@ -87,6 +87,8 @@ Update:
 - `docs/.context/registers/spec-register.md`: set the spec state (shipped, testing, or retired) and add a one-line note.
 - `docs/.context/registers/ost-register.md`: change a node state only if there is evidence (a test result, a measurement). Link the evidence. A merged change by itself is not evidence.
 
+In a Lab 2 swarm, do not edit the registers. Put the rows in your final report; the lead adds them after the merge.
+
 Then list what the next spec should address, as a short list. Do not change code.
 ```
 
@@ -126,6 +128,7 @@ Final report:
 - test results
 - any change to the public exports in src/domains/<domain>/index.ts
 - requests for files you do not own
+- register rows for the lead to add (spec state, node state, evidence)
 ```
 
 Lead prompt after all four agents report:
@@ -133,4 +136,5 @@ Lead prompt after all four agents report:
 ```
 Merge the four lab2/* branches into one branch. Then run npm run lint && npm run typecheck && npm test && npm run build and show the output.
 List every file changed outside its owner's paths. List every cross-domain request from the four reports.
+Then add the register rows from the four reports to docs/.context/registers/.
 ```

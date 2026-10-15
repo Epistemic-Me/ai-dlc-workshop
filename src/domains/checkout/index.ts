@@ -4,7 +4,7 @@ import { InMemoryCheckoutProvider } from "./provider";
 import { CheckoutService } from "./service";
 
 export * from "./types";
-export { CheckoutService, TAX_RATE, DISCOUNT_CODES, MAX_QUANTITY } from "./service";
+export { CheckoutService, TAX_RATE, DISCOUNT_CODES, MAX_QUANTITY, MAX_LINES } from "./service";
 export { InMemoryCheckoutProvider, type ProductLookup } from "./provider";
 
 // Checkout reads prices through the search domain's public API only.

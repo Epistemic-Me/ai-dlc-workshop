@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
-  "description": "Example Next.js app for the Clarinet x Clarity AI DLC workshop (Track A).",
+  "description": "Example Next.js app for the AI DLC workshop (Track A).",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

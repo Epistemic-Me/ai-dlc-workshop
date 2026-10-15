@@ -1,6 +1,6 @@
 <p align="center"><img src="public/clarity-logo.png" width="360" alt="Clarity"></p>
 
-# AI DLC Workshop: Clarinet x Clarity (Track A)
+# AI DLC Workshop (Track A)
 
 A small Next.js store you can change with AI coding agents. It has four domains (auth, search, checkout, billing), each with an in-memory mock provider, a service, types, and unit tests. It needs no `.env`, no network, and no secrets.
 
@@ -34,7 +34,7 @@ CI (`.github/workflows/ci.yml`) runs `npm ci`, lint, typecheck, test, and build 
 | **Spec** | Write what the change must do and how you will know it works. Tie it to an outcome and opportunity in the Opportunity Solution Tree. | `docs/specs/<domain>.md`, `docs/.context/ost/`, `docs/.context/registers/spec-register.md` |
 | **Plan** | Have the agent read the spec and the code, then write a plan: files to change, tests to add, risks. You approve the plan before any code. | `docs/PLAN.md` (example for this repo), `docs/plans/<domain>-<change>.md` for each change |
 | **Execute** | The agent implements the plan inside its domain folder and writes tests first or alongside. | `src/domains/<domain>/`, `src/app/api/<domain>/`, the domain's page |
-| **Review** | Run the checks. Have a second agent (or a person) review the diff against the spec. Fix what it finds. | `npm run lint && npm run typecheck && npm test && npm run build`, `docs/REVIEW.md` (example), `docs/reviews/<domain>-<change>.md` for each change |
+| **Review** | Run the checks. Have a second agent (or a person) review the diff against the spec. Fix what it finds. | `npm run lint && npm run typecheck && npm test && npm run build`, `docs/reviews/<domain>-<change>.md` for each change. `docs/REVIEW.md` is the review log for the repo itself. |
 | **Learn** | Record what you learned: which assumption held, which did not, what changes in the tree. | `docs/.context/registers/`, `docs/.context/ost/` |
 
 Copy-paste prompts for each step are in `prompts/` for Claude Code, Codex, Cursor, and Copilot.
@@ -50,12 +50,12 @@ In Lab 2 you run four agents at the same time, one per domain. Each agent owns i
 
 | Agent | Owns | Must not edit |
 |---|---|---|
-| auth | `src/domains/auth/`, `src/app/api/auth/`, `src/app/login/`, `docs/specs/auth.md` | other domains |
-| search | `src/domains/search/`, `src/app/api/search/`, `src/app/page.tsx`, `docs/specs/search.md` | other domains |
-| checkout | `src/domains/checkout/`, `src/app/api/checkout/`, `src/app/checkout/`, `docs/specs/checkout.md` | other domains |
-| billing | `src/domains/billing/`, `src/app/api/billing/`, `src/app/billing/`, `docs/specs/billing.md` | other domains |
+| auth | `src/domains/auth/`, `src/app/api/auth/`, `src/app/login/`, `docs/specs/auth.md`, its plans and reviews | other domains |
+| search | `src/domains/search/`, `src/app/api/search/`, `src/app/page.tsx`, `docs/specs/search.md`, its plans and reviews | other domains |
+| checkout | `src/domains/checkout/`, `src/app/api/checkout/`, `src/app/checkout/`, `docs/specs/checkout.md`, its plans and reviews | other domains |
+| billing | `src/domains/billing/`, `src/app/api/billing/`, `src/app/billing/`, `docs/specs/billing.md`, its plans and reviews | other domains |
 
-Shared files have no agent owner. Only the lead (you) changes them: `src/domains/errors.ts`, `src/domains/singleton.ts`, `src/lib/`, `src/app/layout.tsx`, `src/app/globals.css`, config files, and `package.json`. If an agent needs a shared change, it writes the request in its final report and stops.
+Shared files have no agent owner. Only the lead (you) changes them: `src/domains/errors.ts`, `src/domains/singleton.ts`, `src/lib/`, `src/app/layout.tsx`, `src/app/globals.css`, config files, and `package.json`. If an agent needs a shared change, it writes the request in its final report and stops. The registers in `docs/.context/registers/` are shared too: agents report the rows, and the lead adds them after the merge.
 
 Cross-domain calls go through a domain's `index.ts` only. For example, checkout reads prices through `@/domains/search`, not through search internals.
 
@@ -76,7 +76,7 @@ ai-dlc-workshop/
 ├── .github/workflows/ci.yml lint, typecheck, test, build
 ├── docs/
 │   ├── PLAN.md              example plan for this repo
-│   ├── REVIEW.md            example review for this repo
+│   ├── REVIEW.md            review log for this repo
 │   ├── specs/               one example spec per domain
 │   └── .context/            Opportunity Solution Tree and registers
 ├── prompts/                 copy-paste prompts per tool and DLC step

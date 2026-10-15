@@ -8,8 +8,8 @@ function parseItems(value: unknown): CartItem[] {
   return value.map((item) => ({
     productId: item && typeof item === "object" && "productId" in item
       ? String(item.productId ?? "") : "",
-    quantity: item && typeof item === "object" && "quantity" in item
-      ? Number(item.quantity) : Number.NaN,
+    quantity: item && typeof item === "object" && "quantity" in item && typeof item.quantity === "number"
+      ? item.quantity : Number.NaN,
   }));
 }
 
@@ -17,7 +17,11 @@ export async function POST(request: Request) {
   const body = await readJson(request);
   if (!body) return invalidJson();
   const items = parseItems(body.items);
-  const discountCode = typeof body.discountCode === "string" ? body.discountCode : undefined;
+  const rawCode = body.discountCode;
+  if (rawCode != null && typeof rawCode !== "string") {
+    return errorResponse({ code: "invalid_discount", message: "Discount code must be text." });
+  }
+  const discountCode = typeof rawCode === "string" ? rawCode : undefined;
 
   if (body.place !== true) {
     const quote = checkoutService.quote(items, discountCode);

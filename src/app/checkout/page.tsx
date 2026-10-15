@@ -17,15 +17,23 @@ export default function CheckoutPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Ignore a response that arrives after a newer code was applied.
+    let stale = false;
     api<{ quote: Quote }>("/api/checkout", {
       method: "POST",
       body: JSON.stringify({ items: SAMPLE_CART, discountCode: appliedCode }),
     })
       .then((res) => {
+        if (stale) return;
         setQuote(res.quote);
         setError(null);
       })
-      .catch((e: Error) => setError(e.message));
+      .catch((e: Error) => {
+        if (!stale) setError(e.message);
+      });
+    return () => {
+      stale = true;
+    };
   }, [appliedCode]);
 
   async function placeOrder() {
