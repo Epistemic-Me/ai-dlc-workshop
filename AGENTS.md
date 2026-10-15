@@ -12,7 +12,7 @@ A Next.js 15 (App Router, React 19, TypeScript) example store with four domains 
 - Orders data: `src/db/` (new layer) and `src/legacy/` (old layer, being replaced).
 - Support agent: `src/support-agent/` (mock LLM provider, no network).
 - Architecture, conventions, and commands: `docs/.context/ARCHITECTURE.md`.
-- Specs: `docs/specs/`. Opportunity Solution Tree, registers, and the current sprint: `docs/.context/`. Decisions: `docs/decisions/`.
+- Specs: `docs/specs/`. Opportunity Solution Tree and registers: `docs/.context/`. 
 - PR docs: `docs/prs/`. PR commands: `.claude/commands/` (ports in `.cursor/`, `.codex/`, `.github/prompts/`).
 - Tickets: `backlog/`. Skills: `.claude/skills/`. Prompts per tool: `prompts/`.
 
@@ -42,6 +42,6 @@ Work in this order. Write each step's output to disk.
 1. **Spec**: Read or write `docs/specs/<domain>.md`. It states the behavior, the acceptance criteria, and the outcome it serves in `docs/.context/ost/`. Add a row to `docs/.context/registers/spec-register.md` (in a swarm, put the row in your final report instead).
 2. **Plan**: `/start-pr <TICKET> <short-name>` creates the PR docs folder in `docs/prs/planning/`. Write `RESEARCH.md`, `TEST-STRATEGY.md`, and `IMPLEMENTATION-PLAN.md` before code. Wait for approval if a person is in the loop.
 3. **Execute**: `/execute-pr <TICKET>`. Implement inside your owned files, tests first or alongside, and log each step in `IMPLEMENTATION.md`.
-4. **Review**: `/review-pr <TICKET>`. A fresh reviewer from a second model family checks the diff against `TEST-STRATEGY.md` with evidence and writes `REVIEW.md`. The docs gate runs on the PR.
-5. **Learn**: Update `docs/.context/registers/` with what the change taught: which assumption held, which did not. Record decisions in `docs/decisions/`. In a swarm, the lead does this after the merge from the rows in each final report.
+4. **Review**: `/review-pr <TICKET>`. The author checks the diff in a self-review against `TEST-STRATEGY.md` with evidence and writes `REVIEW.md`. The docs gate runs on the PR.
+5. **Learn**: Update `docs/.context/registers/` with what the change taught: which assumption held, which did not. In a swarm, the lead does this after the merge from the rows in each final report.
 

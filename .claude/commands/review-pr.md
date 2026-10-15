@@ -13,13 +13,9 @@ Argument: the ticket ID, for example `BUG-01`.
 
 ## Who reviews
 
-The reviewer must be fresh: no history from the session that wrote the code. It must also be from a second model family, different from the one that wrote the code. This is required in this course.
+Review the PR in this session. Record the reviewer as a self-review in `REVIEW.md`. Run the checks and inspect their output before you give a verdict.
 
-- If this tool can run a model from a different family, start a fresh session or subagent on that model.
-- If it cannot, run this command in a second tool that can (for example Codex, Cursor, or Copilot with a different model).
-- If neither is possible, use a fresh subagent and write "same model family" in the Reviewer line of `REVIEW.md`.
-
-## Steps for the reviewer
+## Review steps
 
 1. Find `docs/prs/implementing/*-PR-<TICKET>-*` (or `planning/`). Read `RESEARCH.md`, `TEST-STRATEGY.md`, `IMPLEMENTATION-PLAN.md`, and `IMPLEMENTATION.md`.
 2. Read `AGENTS.md` and `docs/.context/ARCHITECTURE.md`.
@@ -32,9 +28,8 @@ The reviewer must be fresh: no history from the session that wrote the code. It 
 ## Then
 
 1. Run the docs gate: `node scripts/pr-docs-check.mjs --ticket <TICKET>`. If the script does not exist, check by hand that `RESEARCH.md`, `TEST-STRATEGY.md`, and `IMPLEMENTATION-PLAN.md` exist and are filled.
-2. If the PR made a decision about architecture or data, propose a record in `docs/decisions/` from `_TEMPLATE.md`. Do not write it until I agree.
-3. Report the verdict, the gate result, and the issues to fix.
-4. Stop. A person decides what goes on the PR and merges it. After the merge, move the folder to `docs/prs/_archive/`.
+2. Report the verdict, the gate result, and the issues to fix.
+3. Stop. A person decides what goes on the PR and merges it. After the merge, move the folder to `docs/prs/_archive/`.
 
 ## No commands set up?
 

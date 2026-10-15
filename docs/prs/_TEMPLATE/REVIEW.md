@@ -4,7 +4,7 @@
 
 - Verdict: Approve | Request changes
 - Reviewed: <YYYY-MM-DD>
-- Reviewer: <tool and model family>. Wrote the code: <tool and model family>.
+- Reviewer: Self-review by <tool and model family>.
 
 ### Summary
 

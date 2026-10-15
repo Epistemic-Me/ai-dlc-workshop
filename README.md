@@ -6,6 +6,10 @@ A small Next.js store you can change with AI coding agents. It has four domains 
 
 The workshop uses this repo to practice the AI development lifecycle (AI DLC): **Spec → Plan → Execute → Review → Learn**.
 
+## This branch
+
+`walk` has the context files, three PR commands, PR document templates, and the CI docs gate. `/review-pr` uses self-review. The store, tests, seeded backlog, and lab exercises stay available.
+
 ## Run it
 
 ```bash
@@ -43,7 +47,6 @@ CI (`.github/workflows/ci.yml`) runs `npm ci`, lint, typecheck, test, and build 
 | Seeded lint class: a deprecated helper used once per domain | `src/lib/http.ts`, `eslint.config.mjs` | Lab 2 |
 | Legacy data-access layer, halfway migrated, with thin tests | `src/legacy/`, `src/db/` | Lab 3 |
 | Verification skill | `.claude/skills/verify/` | Lab 3 |
-| Ten merged PRs with their docs | `docs/prs/_archive/` | Lab 3 |
 | Customer support agent with a mock LLM provider | `src/support-agent/`, `POST /api/support` | Running example, Lab 3 |
 | Team skills `/ost-bootstrap` and `/create-tickets`, and a sample transcript | `.claude/skills/`, `meetings/` | After Lab 4 |
 | Facilitator keys (PR labels, arena) | `docs/facilitator/` | Facilitators |
@@ -57,8 +60,8 @@ Recorded runs and costs are illustrative sample data, and each file says so.
 | **Spec** | Write what the change must do and how you will know it works. Tie it to an outcome and opportunity in the Opportunity Solution Tree. | `backlog/<TICKET>.md`, `docs/specs/<domain>.md`, `docs/.context/ost/`, `docs/SPEC-CHECKLIST.md` |
 | **Plan** | `/start-pr <TICKET> <short-name>` creates the branch and the PR docs. Write the research, the test strategy, and the plan before any code. | `docs/prs/planning/<date>-PR-<TICKET>-<short-name>/`: `RESEARCH.md`, `TEST-STRATEGY.md`, `IMPLEMENTATION-PLAN.md` |
 | **Execute** | `/execute-pr <TICKET>` implements the plan one step at a time and logs each step. | `docs/prs/implementing/.../IMPLEMENTATION.md`, the code |
-| **Review** | `/review-pr <TICKET>` runs a fresh reviewer from a second model family against the test strategy, with evidence per criterion, then the docs gate. A person merges. | `REVIEW.md`, `.claude/skills/verify/`, `scripts/pr-docs-check.mjs` |
-| **Learn** | Record what the change taught: which assumption held, which did not, and any decision. | `docs/.context/registers/`, `docs/decisions/`, `docs/prs/_archive/` |
+| **Review** | `/review-pr <TICKET>` uses self-review against the test strategy, with evidence per criterion, then the docs gate. A person merges. | `REVIEW.md`, `.claude/skills/verify/`, `scripts/pr-docs-check.mjs` |
+| **Learn** | Record what the change taught: which assumption held, which did not, and any decision. | `docs/.context/registers/`, `docs/.context/registers/` |
 
 `docs/REVIEW.md` is the review log for the repo itself.
 
@@ -107,9 +110,9 @@ See `AGENTS.md` for the rules agents follow.
 
 | Branch | Harness |
 |---|---|
-| `main` | Everything in this README. |
+| `main` | The full lab kit. |
 | `walk` | Context files, the three PR commands, and the docs gate. `/review-pr` reviews in the same tool. |
-| `run` | `walk`, plus `/review-pr` with a fresh reviewer from a second model family, decision records in `docs/decisions/`, and `docs/.context/CURRENT_SPRINT.md`. |
+| `run` | `walk`, plus `/review-pr` with a fresh reviewer from a second model family, decision records and a current-sprint file. |
 | `sprint` | `run`, plus optional extras: an alignment-scoring step that skips cleanly without a key, and commands for research, planning, and handoffs. |
 
 The lab kit is on every branch. Walk and run need nothing beyond your agent. The sprint branch is optional.
@@ -131,10 +134,9 @@ ai-dlc-workshop/
 ├── backlog/                 seeded tickets
 ├── costlog/                 cost log and recorded-before-runs/
 ├── docs/
-│   ├── .context/            ARCHITECTURE.md, CURRENT_SPRINT.md, tree and registers
-│   ├── decisions/           decision records
-│   ├── facilitator/         keys for the labeling step and the arena
-│   ├── prs/                 _TEMPLATE/, planning/, implementing/, _archive/ (ten example PRs)
+│   ├── .context/            ARCHITECTURE.md, tree and registers
+│   │   ├── facilitator/         keys for the labeling step and the arena
+│   ├── prs/                 _TEMPLATE/, planning/, implementing/
 │   ├── specs/               one spec per domain
 │   ├── LAB-KIT-PLAN.md      plan for the lab kit
 │   ├── PLAN.md              first plan for this repo

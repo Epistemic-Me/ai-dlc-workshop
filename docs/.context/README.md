@@ -10,7 +10,6 @@ Tickets say what to build and who is building it. This folder says why: which ou
 docs/.context/
 ├── README.md                  this file: vocabulary, states, rules
 ├── ARCHITECTURE.md            layout, conventions, the orders data layer
-├── CURRENT_SPRINT.md          what is in flight this sprint
 ├── ost/
 │   └── example-ost.md         one tree per area
 └── registers/
