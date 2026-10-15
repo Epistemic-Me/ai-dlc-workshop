@@ -1,6 +1,6 @@
 # Codex prompts
 
-The three PR commands for Codex: `start-pr.md`, `execute-pr.md`, `review-pr.md`. They are the same as `.claude/commands/`.
+The PR commands for Codex: `start-pr.md`, `execute-pr.md`, `review-pr.md`, `research-pr.md`, `plan-pr.md`, and `handoff-pr.md`. They are the same as `.claude/commands/`.
 
 Codex reads custom prompts from `~/.codex/prompts/`, not from the repo. To use them as commands, copy them:
 

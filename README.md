@@ -8,7 +8,9 @@ The workshop uses this repo to practice the AI development lifecycle (AI DLC): *
 
 ## This branch
 
-`run` adds a fresh AI reviewer for `/review-pr`, decision records, and the current-sprint context file to the walk scaffold. [PR #001](docs/prs/_archive/2026-09-01-PR-001-search-tag-match/RESEARCH.md) is a worked example with all five PR documents in the same folder.
+`sprint` includes the run scaffold. `/review-pr` can score stakeholder alignment through Clarity when `CLARITY_API_KEY` and the external scoring setup are present. It records a skip when the key is absent. Research, planning, and handoff commands are available for all four tools. [PR #001](docs/prs/_archive/2026-09-01-PR-001-search-tag-match/RESEARCH.md) is the worked example.
+
+The optional scorer uses `CLARITY_API_PATH/scripts/compound.py` and stakeholder configuration in `scripts/compound_config.py` or `.stakeholders.json`. Keep credentials outside the repo. The normal review and docs gate work without them.
 
 ## Run it
 

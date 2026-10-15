@@ -21,6 +21,10 @@
 - Must fix:
 - Suggestions:
 
+### Stakeholder alignment
+
+<score and report path, skipped (no API key), or skipped (setup incomplete)>
+
 ### Risk
 
 <What could break, how far it reaches, and how to roll back.>

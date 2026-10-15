@@ -24,6 +24,10 @@ Spawn a fresh AI reviewer with no history from the session that wrote the code. 
 6. Look for: changes the plan did not ask for, files outside the owner's paths, missing edge cases, and the blast radius if the change is wrong.
 7. Write or append `REVIEW.md` from the template: verdict, the AC table, issues, and risk. If a review exists, add `## Review v<N+1>`; the last verdict counts.
 
+## Optional stakeholder alignment
+
+After writing `REVIEW.md`, check whether `CLARITY_API_KEY` is set without printing its value. If it is unset, record `Stakeholder alignment: skipped (no API key)` in `REVIEW.md` and continue to the docs gate. If it is set, check that `CLARITY_API_PATH/scripts/compound.py` and `scripts/compound_config.py` or `.stakeholders.json` exist. If either is missing, record `Stakeholder alignment: skipped (setup incomplete)` and continue. Otherwise run `python3 "${CLARITY_API_PATH}/scripts/compound.py" --config-dir ./scripts stakeholder-alignment "<PR docs folder>/"`. Read the generated `STAKEHOLDER-ALIGNMENT.md`, then record the score and report path in `REVIEW.md`. If the API call fails, record the error status without the key and continue the code review. Alignment is advisory; it does not change the review verdict.
+
 ## Then
 
 1. Run the docs gate: `node scripts/pr-docs-check.mjs --ticket <TICKET>`. If the script does not exist, check by hand that `RESEARCH.md`, `TEST-STRATEGY.md`, and `IMPLEMENTATION-PLAN.md` exist and are filled.
