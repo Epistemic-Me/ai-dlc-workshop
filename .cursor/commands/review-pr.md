@@ -27,8 +27,9 @@ The reviewer must be fresh: no history from the session that wrote the code. It 
 ## Then
 
 1. Run the docs gate: `node scripts/pr-docs-check.mjs --ticket <TICKET>`. If the script does not exist, check by hand that `RESEARCH.md`, `TEST-STRATEGY.md`, and `IMPLEMENTATION-PLAN.md` exist and are filled.
-2. Report the verdict, the gate result, and the issues to fix.
-3. Stop. A person decides what goes on the PR and merges it. After the merge, move the folder to `docs/prs/_archive/`.
+2. If the PR made a decision about architecture or data, propose a record in `docs/decisions/` from `_TEMPLATE.md`. Do not write it until I agree.
+3. Report the verdict, the gate result, and the issues to fix.
+4. Stop. A person decides what goes on the PR and merges it. After the merge, move the folder to `docs/prs/_archive/`.
 
 ## No commands set up?
 

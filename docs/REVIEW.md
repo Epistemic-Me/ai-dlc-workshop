@@ -1,6 +1,6 @@
 # Repo review log
 
-This file records reviews of the repo itself. Reviews of a single change go in `docs/reviews/<domain>-<short-name>.md`.
+This file records reviews of the repo itself. Reviews of a single change go in the PR's `REVIEW.md` in `docs/prs/`.
 
 ## First review
 

@@ -9,6 +9,10 @@ Copy-paste prompts for each AI DLC step. Replace text in `<angle brackets>`.
 - The skills in `.claude/skills/` are plain Markdown. Ask Codex to read the `SKILL.md` file and follow it.
 - Use suggest or read-only approval mode for the Plan step so Codex cannot edit files until you approve.
 
+## PR commands
+
+The Plan, Execute, and Review steps below are also packaged as three commands that take a ticket ID from `backlog/`. Copy `.codex/prompts/*.md` to `~/.codex/prompts/` and run `/prompts:start-pr <TICKET> <short-name>`, or paste the prompt text. See `.codex/README.md`. Each command file has a plain-language fallback.
+
 ## 0. Orient
 
 ```
@@ -40,7 +44,7 @@ Do not change any code.
 ```
 Read `AGENTS.md` and `docs/specs/<domain>.md`. Read the code in src/domains/<domain>/ and src/app/api/<domain>/.
 
-Write a plan to docs/plans/<domain>-<short-name>.md with:
+Write the plan to IMPLEMENTATION-PLAN.md in the PR docs folder (docs/prs/planning/<date>-PR-<TICKET>-<short-name>/, created by /start-pr) with:
 - each acceptance criterion and the file and function that will satisfy it
 - the tests you will add or change, by name
 - any file you need that you do not own (stop and ask if there is one)
@@ -52,7 +56,7 @@ Do not change any code. Wait for my approval.
 ## 3. Execute
 
 ```
-Implement the approved plan in docs/plans/<domain>-<short-name>.md.
+Implement the approved IMPLEMENTATION-PLAN.md in the PR docs folder. After each step, add what changed and what the tests showed to IMPLEMENTATION.md.
 
 Rules:
 - Edit only files the <domain> agent owns (see `AGENTS.md`).
@@ -73,7 +77,7 @@ Review the current diff against `docs/specs/<domain>.md`.
 3. List bugs, missing tests, and edits outside the <domain> agent's owned files.
 4. Fix what you can inside the owned files. List the rest.
 
-Write the findings and fixes to docs/reviews/<domain>-<short-name>.md.
+Write the findings and fixes to REVIEW.md in the PR docs folder.
 ```
 
 Then start a new Codex session (no shared history) and ask it to review the diff against the spec.
@@ -81,7 +85,7 @@ Then start a new Codex session (no shared history) and ask it to review the diff
 ## 5. Learn
 
 ```
-Read docs/reviews/<domain>-<short-name>.md and `docs/specs/<domain>.md`.
+Read the PR's REVIEW.md and `docs/specs/<domain>.md`.
 
 Update:
 - `docs/.context/registers/spec-register.md`: set the spec state (shipped, testing, or retired) and add a one-line note.
@@ -115,6 +119,7 @@ You own only these paths:
 - src/app/api/<domain>/
 - the <domain> page (see the ownership table in AGENTS.md)
 - docs/specs/<domain>.md
+- the PR docs folders you start in docs/prs/
 
 Do not edit any other file. If you need a change in a file you do not own, stop and write the request in your final report: file, change, reason.
 

@@ -9,6 +9,10 @@ Copy-paste prompts for each AI DLC step. Replace text in `<angle brackets>`.
 - The skills in `.claude/skills/` are plain Markdown. Attach the `SKILL.md` file with `#file:` and ask Copilot to follow it.
 - Use Ask mode for the Plan step so Copilot cannot edit files until you approve.
 
+## PR commands
+
+The Plan, Execute, and Review steps below are also packaged as three commands that take a ticket ID from `backlog/`. Run `/start-pr`, `/execute-pr`, and `/review-pr` in Copilot Chat (agent mode). The prompt files are in `.github/prompts/`. Each command file has a plain-language fallback.
+
 ## 0. Orient
 
 ```
@@ -40,7 +44,7 @@ Do not change any code.
 ```
 Read #file:AGENTS.md and #file:docs/specs/<domain>.md. Read the code in src/domains/<domain>/ and src/app/api/<domain>/.
 
-Write a plan to docs/plans/<domain>-<short-name>.md with:
+Write the plan to IMPLEMENTATION-PLAN.md in the PR docs folder (docs/prs/planning/<date>-PR-<TICKET>-<short-name>/, created by /start-pr) with:
 - each acceptance criterion and the file and function that will satisfy it
 - the tests you will add or change, by name
 - any file you need that you do not own (stop and ask if there is one)
@@ -52,7 +56,7 @@ Do not change any code. Wait for my approval.
 ## 3. Execute
 
 ```
-Implement the approved plan in docs/plans/<domain>-<short-name>.md.
+Implement the approved IMPLEMENTATION-PLAN.md in the PR docs folder. After each step, add what changed and what the tests showed to IMPLEMENTATION.md.
 
 Rules:
 - Edit only files the <domain> agent owns (see #file:AGENTS.md).
@@ -73,7 +77,7 @@ Review the current diff against #file:docs/specs/<domain>.md.
 3. List bugs, missing tests, and edits outside the <domain> agent's owned files.
 4. Fix what you can inside the owned files. List the rest.
 
-Write the findings and fixes to docs/reviews/<domain>-<short-name>.md.
+Write the findings and fixes to REVIEW.md in the PR docs folder.
 ```
 
 Then request a Copilot code review on the pull request, or open a new chat and ask it to review the diff against the spec.
@@ -81,7 +85,7 @@ Then request a Copilot code review on the pull request, or open a new chat and a
 ## 5. Learn
 
 ```
-Read docs/reviews/<domain>-<short-name>.md and #file:docs/specs/<domain>.md.
+Read the PR's REVIEW.md and #file:docs/specs/<domain>.md.
 
 Update:
 - #file:docs/.context/registers/spec-register.md: set the spec state (shipped, testing, or retired) and add a one-line note.
@@ -115,6 +119,7 @@ You own only these paths:
 - src/app/api/<domain>/
 - the <domain> page (see the ownership table in AGENTS.md)
 - docs/specs/<domain>.md
+- the PR docs folders you start in docs/prs/
 
 Do not edit any other file. If you need a change in a file you do not own, stop and write the request in your final report: file, change, reason.
 

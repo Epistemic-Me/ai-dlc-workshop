@@ -38,10 +38,10 @@ Used by: Lab 1 (BUG-01, REFACTOR-03, MIGRATE-04), Lab 2 (BUG-01 runs, MIGRATE-04
 |---|---|---|
 | BUG-01 | Bug | Checkout accepts the same product on two cart lines, so the 99-per-product limit can be passed. The bug is real and no test covers it. |
 | FEAT-02 | Feature | Save a cart for later. Not built. |
-| REFACTOR-03 | Refactor | The billing, checkout, and orders routes each copy the same session lookup. |
+| REFACTOR-03 | Refactor | The billing, checkout, orders, and support routes each copy the same session lookup. |
 | MIGRATE-04 | Schema migration | Order lines live in a JSON text column. Move them to an `order_lines` table with a rollback. |
 | FLAKY-05 | Flaky test | A repository test uses the real clock and fails when two inserts land in the same millisecond. It is skipped unless `RUN_FLAKY=1`, so CI stays green. |
-| LEGACY-06 | Legacy migration | Three call sites still read orders through `src/legacy/`. Move them to `src/db/` one at a time. |
+| LEGACY-06 | Legacy migration | Four call sites still read orders through `src/legacy/`. Move them to `src/db/` one at a time. |
 
 Each ticket is one Markdown file with the problem, the acceptance criteria, and the scope. `scripts/seed-issues.sh` creates them as GitHub issues with `gh`. Nobody runs it from this repo; a facilitator runs it on a fork.
 
@@ -51,7 +51,7 @@ Used by: Lab 1 (thin context file), Lab 2 (swarm), Lab 3 (LEGACY-06, characteriz
 
 - `src/db/`: an in-memory database with a schema version, migration `001` (up and down), and an `OrderRepository` (integer cents, newest first, empty list when there are no rows).
 - `src/legacy/`: the old order data-access layer over the same store. It keeps old habits on purpose: it returns `null` instead of an empty list, sorts by ID text, returns dollars as floats, and throws on an empty ID. It has one thin test.
-- Checkout writes orders through the new layer. Reads still go through the legacy layer in three call sites: the order history route, and two support agent tools. That is the "halfway" state.
+- Checkout writes orders through the new layer. Reads still go through the legacy layer in four call sites: two in the order history route and two in the support agent tools. That is the "halfway" state.
 - Seeded tech debt for the Lab 2 swarm: a deprecated `jsonError` helper in `src/lib/http.ts`, used once in each domain's route. An ESLint rule at `warn` level flags each use, so `npm run lint` still passes.
 - Thin context files: `AGENTS.md` keeps what the repo is, where things live, and the Lab 2 ownership table. It does not say how to run the tests, the main architecture rule, or what agents get wrong; Lab 1 adds those three lines. The full conventions move to `docs/.context/ARCHITECTURE.md`, so they stay accurate and findable.
 

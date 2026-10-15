@@ -12,7 +12,8 @@ A Next.js 15 (App Router, React 19, TypeScript) example store with four domains 
 - Orders data: `src/db/` (new layer) and `src/legacy/` (old layer, being replaced).
 - Support agent: `src/support-agent/` (mock LLM provider, no network).
 - Architecture, conventions, and commands: `docs/.context/ARCHITECTURE.md`.
-- Specs: `docs/specs/`. Opportunity Solution Tree and registers: `docs/.context/`.
+- Specs: `docs/specs/`. Opportunity Solution Tree, registers, and the current sprint: `docs/.context/`. Decisions: `docs/decisions/`.
+- PR docs: `docs/prs/`. PR commands: `.claude/commands/` (ports in `.cursor/`, `.codex/`, `.github/prompts/`).
 - Tickets: `backlog/`. Skills: `.claude/skills/`. Prompts per tool: `prompts/`.
 
 This file is short on purpose. In Lab 1 you add three lines here: how to run the tests, the one architecture rule that matters most, and one thing agents get wrong in this repo.
@@ -21,10 +22,10 @@ This file is short on purpose. In Lab 1 you add three lines here: how to run the
 
 | Owner | Files |
 |---|---|
-| auth agent | `src/domains/auth/`, `src/app/api/auth/`, `src/app/login/`, `docs/specs/auth.md`, `docs/plans/auth-*.md`, `docs/reviews/auth-*.md` |
-| search agent | `src/domains/search/`, `src/app/api/search/`, `src/app/page.tsx`, `docs/specs/search.md`, `docs/plans/search-*.md`, `docs/reviews/search-*.md` |
-| checkout agent | `src/domains/checkout/`, `src/app/api/checkout/`, `src/app/api/orders/`, `src/app/checkout/`, `docs/specs/checkout.md`, `docs/plans/checkout-*.md`, `docs/reviews/checkout-*.md` |
-| billing agent | `src/domains/billing/`, `src/app/api/billing/`, `src/app/billing/`, `docs/specs/billing.md`, `docs/plans/billing-*.md`, `docs/reviews/billing-*.md` |
+| auth agent | `src/domains/auth/`, `src/app/api/auth/`, `src/app/login/`, `docs/specs/auth.md`, the PR docs folders it starts in `docs/prs/` |
+| search agent | `src/domains/search/`, `src/app/api/search/`, `src/app/page.tsx`, `docs/specs/search.md`, the PR docs folders it starts in `docs/prs/` |
+| checkout agent | `src/domains/checkout/`, `src/app/api/checkout/`, `src/app/api/orders/`, `src/app/checkout/`, `docs/specs/checkout.md`, the PR docs folders it starts in `docs/prs/` |
+| billing agent | `src/domains/billing/`, `src/app/api/billing/`, `src/app/billing/`, `docs/specs/billing.md`, the PR docs folders it starts in `docs/prs/` |
 | lead (human) | everything else: `src/domains/errors.ts`, `src/domains/singleton.ts`, `src/lib/`, `src/db/`, `src/legacy/`, `src/support-agent/`, `src/app/api/support/`, `src/app/layout.tsx`, `src/app/globals.css`, config, `package.json`, `docs/.context/` |
 
 If you are a domain agent:
@@ -39,8 +40,8 @@ If you are a domain agent:
 Work in this order. Write each step's output to disk.
 
 1. **Spec**: Read or write `docs/specs/<domain>.md`. It states the behavior, the acceptance criteria, and the outcome it serves in `docs/.context/ost/`. Add a row to `docs/.context/registers/spec-register.md` (in a swarm, put the row in your final report instead).
-2. **Plan**: Write a plan to `docs/plans/<domain>-<short-name>.md` before code: files to change, tests to add, risks. Wait for approval if a person is in the loop.
-3. **Execute**: Implement inside your owned files. Tests first or alongside.
-4. **Review**: Run lint, typecheck, test, build. Review the diff against the spec. Record findings and fixes in `docs/reviews/<domain>-<short-name>.md`.
-5. **Learn**: Update `docs/.context/registers/` with what the change taught: which assumption held, which did not. In a swarm, the lead does this after the merge from the rows in each final report.
+2. **Plan**: `/start-pr <TICKET> <short-name>` creates the PR docs folder in `docs/prs/planning/`. Write `RESEARCH.md`, `TEST-STRATEGY.md`, and `IMPLEMENTATION-PLAN.md` before code. Wait for approval if a person is in the loop.
+3. **Execute**: `/execute-pr <TICKET>`. Implement inside your owned files, tests first or alongside, and log each step in `IMPLEMENTATION.md`.
+4. **Review**: `/review-pr <TICKET>`. A fresh reviewer from a second model family checks the diff against `TEST-STRATEGY.md` with evidence and writes `REVIEW.md`. The docs gate runs on the PR.
+5. **Learn**: Update `docs/.context/registers/` with what the change taught: which assumption held, which did not. Record decisions in `docs/decisions/`. In a swarm, the lead does this after the merge from the rows in each final report.
 
