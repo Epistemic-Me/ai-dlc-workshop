@@ -1,0 +1,8 @@
+---
+description: Repo rules for the AI DLC workshop store
+alwaysApply: true
+---
+
+Read `AGENTS.md` and follow it. It has what the repo is, where things live, and the domain ownership for Lab 2.
+
+The PR commands are in `.cursor/commands/`: `/start-pr <TICKET> <short-name>`, `/execute-pr <TICKET>`, `/review-pr <TICKET>`. Tickets are in `backlog/`. PR docs go in `docs/prs/`.

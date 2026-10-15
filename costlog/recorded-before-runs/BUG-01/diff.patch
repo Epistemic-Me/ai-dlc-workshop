@@ -1,0 +1,17 @@
+diff --git a/src/domains/checkout/service.ts b/src/domains/checkout/service.ts
+index ff97ec7..9699349 100644
+--- a/src/domains/checkout/service.ts
++++ b/src/domains/checkout/service.ts
+@@ -32,7 +32,12 @@ export class CheckoutService {
+     }
+ 
+     const lines: QuoteLine[] = [];
++    const seen = new Set<string>();
+     for (const item of items) {
++      if (seen.has(item.productId)) {
++        return fail("invalid_quantity", "Each product can only appear once.");
++      }
++      seen.add(item.productId);
+       if (!Number.isInteger(item.quantity) || item.quantity < 1 || item.quantity > MAX_QUANTITY) {
+         return fail("invalid_quantity", `Quantity must be a whole number from 1 to ${MAX_QUANTITY}.`);
+       }

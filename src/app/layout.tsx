@@ -4,7 +4,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "AI DLC Workshop Store",
-  description: "Example app for the Clarinet x Clarity AI DLC workshop.",
+  description: "Example app for the AI DLC workshop.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -12,9 +12,9 @@ Shoppers see a full price breakdown for a cart, can apply a discount code, and p
 ## Acceptance criteria
 
 1. `quote(items, discountCode?)` returns lines, subtotal, discount, tax, and total in integer cents.
-2. Quantity must be a whole number from 1 to 99. Otherwise `invalid_quantity`.
-3. Unknown product ID returns `unknown_product`. Empty cart returns `empty_cart`.
-4. Discount code `WORKSHOP10` takes 10% off the subtotal. Codes are case-insensitive. An unknown code returns `invalid_discount`.
+2. Quantity must be a JSON number that is a whole number from 1 to 99. Otherwise `invalid_quantity`. A string such as `"2"` is not accepted.
+3. Unknown product ID returns `unknown_product`. Empty cart returns `empty_cart`. A cart with more than 50 lines returns `too_many_lines`.
+4. Discount code `WORKSHOP10` takes 10% off the subtotal. Codes are case-insensitive. An unknown code, or a code that is not text, returns `invalid_discount`.
 5. Tax is 8% of the discounted subtotal, rounded to the nearest cent.
 6. `placeOrder` requires a logged-in user (`unauthenticated` otherwise) and stores the order.
 7. Checkout reads product prices through `@/domains/search` only.

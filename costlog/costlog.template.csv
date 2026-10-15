@@ -1,0 +1,1 @@
+date,ticket,run,tool,input_tokens,output_tokens,cached_tokens,requests,agent_minutes,human_minutes,review_minutes,rework_minutes,rereview_minutes,outcome,cost_usd

@@ -14,7 +14,7 @@ A small open-source Next.js app that workshop participants clone, run, and chang
 - Scripts: `dev`, `build`, `start`, `lint`, `typecheck`, `test`.
 - ESLint flat config with `next/core-web-vitals` and `next/typescript`.
 - CI on push and pull request: Node 22, `npm ci`, lint, typecheck, test, build.
-- No client or company names. No time estimates.
+- No client names in app text, docs, or skills. The logo, the license holder, and the clone URL name the repo owner only. No time estimates.
 
 ## File tree
 
@@ -43,7 +43,7 @@ ai-dlc-workshop/
 │   ├── codex.md
 │   ├── copilot.md
 │   └── cursor.md
-├── public/clarity-logo.png          (exists, do not modify)
+├── public/clarity-logo.png          (README logo)
 ├── src/
 │   ├── app/
 │   │   ├── layout.tsx
@@ -54,11 +54,17 @@ ai-dlc-workshop/
 │   │   ├── billing/page.tsx
 │   │   └── api/
 │   │       ├── auth/login/route.ts
+│   │       ├── auth/logout/route.ts
 │   │       ├── auth/session/route.ts
 │   │       ├── search/route.ts
 │   │       ├── checkout/route.ts
 │   │       └── billing/route.ts
+│   ├── lib/
+│   │   ├── client.ts                (browser fetch helper, money format)
+│   │   └── http.ts                  (JSON parsing, error to status code)
 │   └── domains/
+│       ├── errors.ts                (Result type, ok, fail)
+│       ├── singleton.ts             (one store per domain across routes)
 │       ├── auth/      { types.ts, provider.ts, service.ts, service.test.ts, index.ts }
 │       ├── search/    { same shape }
 │       ├── checkout/  { same shape }
@@ -72,7 +78,7 @@ ai-dlc-workshop/
 ├── package.json
 ├── package-lock.json
 ├── tsconfig.json
-└── vitest.config.ts
+└── vitest.config.mts
 ```
 
 ## Domains
@@ -118,7 +124,8 @@ Domains do not import from each other's internals. Cross-domain data passes thro
 
 | Route | Method | Domain | Purpose |
 |---|---|---|---|
-| `/api/auth/login` | POST | auth | Log in, return session |
+| `/api/auth/login` | POST | auth | Log in, return `{ session }` |
+| `/api/auth/logout` | POST | auth | Delete the session in `Authorization: Bearer <token>` |
 | `/api/auth/session` | GET | auth | Read session from `Authorization: Bearer <token>` |
 | `/api/search` | GET | search | `?q=&category=&limit=` |
 | `/api/checkout` | POST | checkout | `{ items, discountCode? }` returns quote; with `place: true` places order |
@@ -152,5 +159,5 @@ Checks that must pass before the work is done: `npm install`, `npm run lint`, `n
 - `AGENTS.md`: conventions, commands, domain ownership, DLC steps. `CLAUDE.md` points to it.
 - `docs/.context/`: Opportunity Solution Tree README, one example tree, spec and OST registers.
 - `docs/specs/`: one example spec per domain.
-- `.claude/skills/`: generic `ost-bootstrap` and `create-tickets` skills, generalized from `stubs/`. Then `stubs/` is deleted.
+- `.claude/skills/`: generic `ost-bootstrap` and `create-tickets` skills.
 - `prompts/`: copy-paste prompts for each DLC step, one file per tool.

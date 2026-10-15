@@ -70,6 +70,13 @@ describe("CheckoutService", () => {
     if (!result.ok) expect(result.error.code).toBe("empty_cart");
   });
 
+  it("rejects a cart with more than 50 lines", () => {
+    const items = Array.from({ length: 51 }, () => ({ productId: "a", quantity: 1 }));
+    const result = service.quote(items);
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.error.code).toBe("too_many_lines");
+  });
+
   it("stores a placed order for the user", () => {
     const result = service.placeOrder("user_1", [{ productId: "a", quantity: 1 }]);
     expect(result.ok).toBe(true);

@@ -4,76 +4,44 @@ Rules for any coding agent working in this repo (Claude Code, Codex, Cursor, Cop
 
 ## What this repo is
 
-A Next.js 15 (App Router, React 19, TypeScript) example store with four domains: auth, search, checkout, billing. Each domain uses an in-memory mock provider. There is no database, no network call, no `.env`, and no secret.
+A Next.js 15 (App Router, React 19, TypeScript) example store with four domains (auth, search, checkout, billing) and a customer support agent. Each domain uses an in-memory mock provider. There is no database server, no network call, no `.env`, and no secret.
 
-## Commands
+## Where things live
 
-```bash
-npm install          # install
-npm run dev          # dev server on http://localhost:3000
-npm run lint         # ESLint
-npm run typecheck    # tsc --noEmit
-npm test             # Vitest
-npm run build        # production build
-```
+- Domains: `src/domains/<name>/`. API routes: `src/app/api/<name>/`. Pages: `src/app/`.
+- Orders data: `src/db/` (new layer) and `src/legacy/` (old layer, being replaced).
+- Support agent: `src/support-agent/` (mock LLM provider, no network).
+- Architecture, conventions, and commands: `docs/.context/ARCHITECTURE.md`.
+- Specs: `docs/specs/`. Opportunity Solution Tree, registers, and the current sprint: `docs/.context/`. Decisions: `docs/decisions/`.
+- PR docs: `docs/prs/`. PR commands: `.claude/commands/` (ports in `.cursor/`, `.codex/`, `.github/prompts/`).
+- Tickets: `backlog/`. Skills: `.claude/skills/`. Prompts per tool: `prompts/`.
 
-A change is done only when lint, typecheck, test, and build all pass. Run them and read the output. Do not report a result you did not run.
-
-## Domain layout
-
-Every domain under `src/domains/<name>/` has the same files:
-
-| File | Purpose |
-|---|---|
-| `types.ts` | Domain types and the provider interface |
-| `provider.ts` | In-memory mock provider with seed data |
-| `service.ts` | Business rules. Takes a provider in the constructor. |
-| `service.test.ts` | Unit tests for the service |
-| `index.ts` | Public exports and the shared service instance |
-
-API route handlers live in `src/app/api/<name>/`. They parse input, call the service, and map errors to HTTP status codes. Business rules go in the service, not the route.
-
-## Conventions
-
-- TypeScript strict mode. No `any`.
-- Services return `Result<T>` (`{ ok: true, value }` or `{ ok: false, error: { code, message } }`) for expected failures. Do not throw for input errors.
-- Money is integer cents. Never use floats for stored amounts.
-- Inject time and ID generators (`now`, `createId`, `createToken`) so tests are deterministic.
-- Import another domain only through its `index.ts` (`@/domains/<name>`). Never import its `provider.ts` or `service.ts`.
-- Pages and components import domain **types** only, never services. They call the API routes.
-- Add or update tests in the same change as the code.
-- No new dependencies without the lead's approval.
-- No secrets, API keys, or real customer data in the repo. Mock data uses `example.com` addresses.
+This file is short on purpose. In Lab 1 you add three lines here: how to run the tests, the one architecture rule that matters most, and one thing agents get wrong in this repo.
 
 ## Domain ownership (Lab 2 swarm)
 
 | Owner | Files |
 |---|---|
-| auth agent | `src/domains/auth/`, `src/app/api/auth/`, `src/app/login/`, `docs/specs/auth.md` |
-| search agent | `src/domains/search/`, `src/app/api/search/`, `src/app/page.tsx`, `docs/specs/search.md` |
-| checkout agent | `src/domains/checkout/`, `src/app/api/checkout/`, `src/app/checkout/`, `docs/specs/checkout.md` |
-| billing agent | `src/domains/billing/`, `src/app/api/billing/`, `src/app/billing/`, `docs/specs/billing.md` |
-| lead (human) | everything else: `src/domains/errors.ts`, `src/domains/singleton.ts`, `src/lib/`, `src/app/layout.tsx`, `src/app/globals.css`, config, `package.json`, `docs/.context/` |
+| auth agent | `src/domains/auth/`, `src/app/api/auth/`, `src/app/login/`, `docs/specs/auth.md`, the PR docs folders it starts in `docs/prs/` |
+| search agent | `src/domains/search/`, `src/app/api/search/`, `src/app/page.tsx`, `docs/specs/search.md`, the PR docs folders it starts in `docs/prs/` |
+| checkout agent | `src/domains/checkout/`, `src/app/api/checkout/`, `src/app/api/orders/`, `src/app/checkout/`, `docs/specs/checkout.md`, the PR docs folders it starts in `docs/prs/` |
+| billing agent | `src/domains/billing/`, `src/app/api/billing/`, `src/app/billing/`, `docs/specs/billing.md`, the PR docs folders it starts in `docs/prs/` |
+| lead (human) | everything else: `src/domains/errors.ts`, `src/domains/singleton.ts`, `src/lib/`, `src/db/`, `src/legacy/`, `src/support-agent/`, `src/app/api/support/`, `src/app/layout.tsx`, `src/app/globals.css`, config, `package.json`, `docs/.context/` |
 
 If you are a domain agent:
 
 - Edit only files you own.
 - If you need a change in a file you do not own, stop and put the request in your final report. Say which file, what change, and why.
 - If you change your domain's public exports in `index.ts`, list the change in your final report so other agents can adapt.
+- Do not edit `docs/.context/registers/`. Put the register rows you want (spec state, node state, evidence) in your final report. The lead adds them after the merge, so four agents do not edit the same file.
 
 ## AI DLC steps
 
 Work in this order. Write each step's output to disk.
 
-1. **Spec**: Read or write `docs/specs/<domain>.md`. It states the behavior, the acceptance criteria, and the outcome it serves in `docs/.context/ost/`.
-2. **Plan**: Write a plan before code: files to change, tests to add, risks. Wait for approval if a person is in the loop.
-3. **Execute**: Implement inside your owned files. Tests first or alongside.
-4. **Review**: Run lint, typecheck, test, build. Review the diff against the spec. Record findings and fixes.
-5. **Learn**: Update `docs/.context/registers/` with what the change taught: which assumption held, which did not.
+1. **Spec**: Read or write `docs/specs/<domain>.md`. It states the behavior, the acceptance criteria, and the outcome it serves in `docs/.context/ost/`. Add a row to `docs/.context/registers/spec-register.md` (in a swarm, put the row in your final report instead).
+2. **Plan**: `/start-pr <TICKET> <short-name>` creates the PR docs folder in `docs/prs/planning/`. Write `RESEARCH.md`, `TEST-STRATEGY.md`, and `IMPLEMENTATION-PLAN.md` before code. Wait for approval if a person is in the loop.
+3. **Execute**: `/execute-pr <TICKET>`. Implement inside your owned files, tests first or alongside, and log each step in `IMPLEMENTATION.md`.
+4. **Review**: `/review-pr <TICKET>`. A fresh reviewer from a second model family checks the diff against `TEST-STRATEGY.md` with evidence and writes `REVIEW.md`. The docs gate runs on the PR.
+5. **Learn**: Update `docs/.context/registers/` with what the change taught: which assumption held, which did not. Record decisions in `docs/decisions/`. In a swarm, the lead does this after the merge from the rows in each final report.
 
-## Where things live
-
-- Specs: `docs/specs/`
-- Opportunity Solution Tree and registers: `docs/.context/`
-- Skills: `.claude/skills/` (`ost-bootstrap`, `create-tickets`)
-- Prompts per tool: `prompts/`

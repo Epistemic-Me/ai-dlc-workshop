@@ -4,6 +4,7 @@ import type { CartItem, CheckoutProvider, Order, Quote, QuoteLine } from "./type
 export const TAX_RATE = 0.08;
 export const DISCOUNT_CODES: Record<string, number> = { WORKSHOP10: 0.1 };
 export const MAX_QUANTITY = 99;
+export const MAX_LINES = 50;
 
 type Options = {
   now?: () => number;
@@ -25,6 +26,9 @@ export class CheckoutService {
   quote(items: CartItem[], discountCode?: string): Result<Quote> {
     if (items.length === 0) {
       return fail("empty_cart", "Cart is empty.");
+    }
+    if (items.length > MAX_LINES) {
+      return fail("too_many_lines", `A cart can have at most ${MAX_LINES} lines.`);
     }
 
     const lines: QuoteLine[] = [];

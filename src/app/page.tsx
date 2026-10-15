@@ -13,14 +13,22 @@ export default function SearchPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Ignore a response that arrives after a newer query has started.
+    let stale = false;
     const params = new URLSearchParams({ q: query });
     if (category) params.set("category", category);
     api<SearchResponse>(`/api/search?${params}`)
       .then((res) => {
+        if (stale) return;
         setData(res);
         setError(null);
       })
-      .catch((e: Error) => setError(e.message));
+      .catch((e: Error) => {
+        if (!stale) setError(e.message);
+      });
+    return () => {
+      stale = true;
+    };
   }, [query, category]);
 
   return (

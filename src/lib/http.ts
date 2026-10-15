@@ -11,6 +11,7 @@ const STATUS: Record<string, number> = {
   invalid_quantity: 400,
   invalid_discount: 400,
   empty_cart: 400,
+  too_many_lines: 400,
   same_plan: 409,
 };
 
@@ -25,6 +26,14 @@ export async function readJson(request: Request): Promise<Record<string, unknown
   } catch {
     return null;
   }
+}
+
+/**
+ * @deprecated Use errorResponse() with a domain error, or invalidJson().
+ * Old helper: the caller picks the status code, so it can drift from STATUS.
+ */
+export function jsonError(code: string, message: string, status: number) {
+  return NextResponse.json({ error: { code, message } }, { status });
 }
 
 export const invalidJson = () =>

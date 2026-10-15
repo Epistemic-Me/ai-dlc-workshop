@@ -18,6 +18,8 @@ Shoppers log in with email and password and get a session token. API routes read
 5. A session expires one hour after login. `getSession` returns `null` for an expired token and deletes it.
 6. `logout(token)` deletes the session.
 7. `GET /api/auth/session` returns `{ user }` with no password field, or `{ user: null }`.
+8. `POST /api/auth/login` with `{ email, password }` returns `{ session }`, or an error with status 400 (`invalid_input`) or 401 (`invalid_credentials`).
+9. `POST /api/auth/logout` deletes the session in `Authorization: Bearer <token>` and returns `{ ok: true }`, with or without a valid token.
 
 ## Out of scope
 

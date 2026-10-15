@@ -2,6 +2,7 @@ import type { Product, SearchProvider, SearchQuery } from "./types";
 
 export const DEFAULT_LIMIT = 20;
 export const MAX_LIMIT = 50;
+export const MAX_QUERY_LENGTH = 200;
 
 export function clampLimit(limit: number | undefined): number {
   if (limit === undefined || Number.isNaN(limit)) return DEFAULT_LIMIT;
